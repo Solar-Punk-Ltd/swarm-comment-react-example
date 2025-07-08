@@ -1,0 +1,40 @@
+{
+  "name": "swarm-comment-react-example",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build"
+  },
+  "dependencies": {
+    "@solarpunkltd/swarm-comment-js": "^0.0.1",
+    "@solarpunkltd/comment-system": "^1.8.2",
+    "@ethersphere/bee-js": "^9.0.3",
+    "clsx": "^2.1.1",
+    "emoji-picker-react": "^4.12.2",
+    "ethers": "^6.13.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react-swc": "^3.7.1",
+    "sass": "^1.80.7",
+    "typescript": "^4.9.5",
+    "vite": "^5.4.11",
+    "vite-plugin-node-polyfills": "^0.22.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
