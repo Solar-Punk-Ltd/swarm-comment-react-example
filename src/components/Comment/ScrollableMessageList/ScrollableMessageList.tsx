@@ -1,40 +1,48 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from "react";
+import { VisibleMessage } from "@/hooks/useSwarmComment";
 
-import './ScrollableMessageList.scss';
+import "./ScrollableMessageList.scss";
 
-interface ScrollableMessageListProps<T> {
-  items: T[];
-  renderItem: (item: T) => React.ReactNode;
+interface ScrollableMessageListProps {
+  items: VisibleMessage[];
+  renderItem: (item: VisibleMessage) => React.ReactNode;
 }
 
-export function ScrollableMessageList<T>({ items, renderItem }: ScrollableMessageListProps<T>) {
-  const [autoscroll, setAutoscroll] = useState(true);
+export function ScrollableMessageList({
+  items,
+  renderItem,
+}: ScrollableMessageListProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const previousItemsLengthRef = useRef<number>(0);
 
-  const handleScroll = () => {
-    if (!containerRef.current) return;
+  const scrollToBottom = () => {
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    }
+  };
+
+  const isNearBottom = () => {
+    if (!containerRef.current) return true;
 
     const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
-    setAutoscroll(scrollTop + clientHeight >= scrollHeight - 10);
+    const threshold = 100; // pixels from bottom
+    return scrollTop + clientHeight >= scrollHeight - threshold;
   };
 
   useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
+    const count = items.length;
 
-    el.addEventListener('scroll', handleScroll);
+    if (count > previousItemsLengthRef.current || isNearBottom()) {
+      previousItemsLengthRef.current = count;
 
-    return () => el.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  useEffect(() => {
-    if (autoscroll && containerRef.current) {
-      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+      requestAnimationFrame(() => {
+        scrollToBottom();
+      });
     }
   }, [items]);
 
   return (
-    <div className="comment-messages-container" ref={containerRef}>
+    <div className="chat-messages-container" ref={containerRef}>
       {items.map(renderItem)}
     </div>
   );
