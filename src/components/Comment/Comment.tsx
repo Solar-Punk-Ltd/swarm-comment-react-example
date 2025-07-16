@@ -43,6 +43,11 @@ export const Comment: React.FC<CommentProps> = ({ topic, signer, nickname }) => 
     null
   );
   const [isThreadView, setIsThreadView] = useState(false);
+  const [reactionLoadingState, setReactionLoadingState] = useState<
+    Record<string, string>
+  >({});
+  const [isSendingMessage, setIsSendingMessage] = useState(false);
+  const [isSendingThreadMessage, setIsSendingThreadMessage] = useState(false);
 
   const {
     commentLoading,
@@ -69,10 +74,32 @@ export const Comment: React.FC<CommentProps> = ({ topic, signer, nickname }) => 
     },
   });
 
-  const handleMessageSending = async (text: string) => sendMessage(text);
+  const handleMessageSending = async (text: string) => {
+    try {
+      setIsSendingMessage(true);
+      await sendMessage(text);
+    } finally {
+      setIsSendingMessage(false);
+    }
+  };
 
-  const handleEmojiReaction = (messageId: string, emoji: string) => {
-    sendReaction(messageId, emoji);
+  const handleEmojiReaction = async (messageId: string, emoji: string) => {
+    // Prevent multiple reactions on the same message-emoji combination
+    const loadingKey = `${messageId}-${emoji}`;
+    if (reactionLoadingState[loadingKey]) return;
+
+    try {
+      setReactionLoadingState((prev) => ({ ...prev, [loadingKey]: emoji }));
+      await sendReaction(messageId, emoji);
+    } finally {
+      // Clear loading state after a short delay to prevent rapid clicking
+      setTimeout(() => {
+        setReactionLoadingState((prev) => {
+          const { [loadingKey]: _, ...rest } = prev;
+          return rest;
+        });
+      }, 500);
+    }
   };
 
   const handleThreadReply = (message: VisibleMessage) => {
@@ -87,9 +114,19 @@ export const Comment: React.FC<CommentProps> = ({ topic, signer, nickname }) => 
 
   const handleThreadMessageSending = async (text: string) => {
     if (selectedMessage) {
-      await sendReply(selectedMessage.id, text);
+      try {
+        setIsSendingThreadMessage(true);
+        await sendReply(selectedMessage.id, text);
+      } finally {
+        setIsSendingThreadMessage(false);
+      }
     }
   };
+
+  const isAnyOperationLoading =
+    Object.keys(reactionLoadingState).length > 0 ||
+    isSendingMessage ||
+    isSendingThreadMessage;
 
   if (error) {
     return (
@@ -113,8 +150,11 @@ export const Comment: React.FC<CommentProps> = ({ topic, signer, nickname }) => 
           onBack={handleBackToMain}
           onSendMessage={handleThreadMessageSending}
           onEmojiReaction={handleEmojiReaction}
+          onRetry={retrySendMessage}
           getColorForName={getColorForName}
           currentUserAddress={signer.publicKey().address().toString()}
+          reactionLoadingState={reactionLoadingState}
+          disabled={isAnyOperationLoading}
         />
       ) : (
         <>
@@ -153,12 +193,26 @@ export const Comment: React.FC<CommentProps> = ({ topic, signer, nickname }) => 
                     handleEmojiReaction(item.id, emoji)
                   }
                   onThreadReply={() => handleThreadReply(item)}
+                  isReactionLoading={Object.keys(reactionLoadingState).some(
+                    (key) => key.startsWith(item.id)
+                  )}
+                  loadingReactionEmoji={
+                    Object.entries(reactionLoadingState).find(([key]) =>
+                      key.startsWith(item.id)
+                    )?.[1] || ""
+                  }
+                  disabled={isAnyOperationLoading}
                 />
               )}
             />
           )}
 
-          {!commentLoading && <MessageSender onSend={handleMessageSending} />}
+          {!commentLoading && (
+            <MessageSender
+              onSend={handleMessageSending}
+              disabled={isAnyOperationLoading}
+            />
+          )}
         </>
       )}
     </div>

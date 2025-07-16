@@ -21,6 +21,9 @@ interface CommentMessageProps {
   onEmojiReaction: (emoji: string) => void;
   onRetry?: () => void;
   onThreadReply?: () => void;
+  isReactionLoading?: boolean;
+  loadingReactionEmoji?: string;
+  disabled?: boolean;
 }
 
 export function CommentMessage({
@@ -35,6 +38,9 @@ export function CommentMessage({
   onRetry,
   onEmojiReaction,
   onThreadReply,
+  isReactionLoading = false,
+  loadingReactionEmoji = "",
+  disabled = false,
 }: CommentMessageProps) {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -67,11 +73,15 @@ export function CommentMessage({
           reactions={reactions}
           onEmojiClick={onEmojiReaction}
           ownMessage={ownMessage}
+          isLoading={isReactionLoading}
+          loadingEmoji={loadingReactionEmoji}
+          disabled={disabled}
         />
 
         <MessageThreadWrapper
           threadCount={threadCount}
           onThreadClick={onThreadReply}
+          disabled={disabled}
         />
       </div>
 
@@ -80,6 +90,8 @@ export function CommentMessage({
         onEmojiClick={onEmojiReaction}
         onThreadClick={onThreadReply}
         ownMessage={ownMessage}
+        isReactionLoading={isReactionLoading}
+        disabled={disabled}
       />
     </div>
   );

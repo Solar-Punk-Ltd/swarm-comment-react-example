@@ -238,7 +238,7 @@ export const useSwarmComment = ({ user, infra }: CommentSettings) => {
   }, []);
 
   const fetchPreviousMessages = useCallback(() => {
-    return commentRef.current?.fetchPreviousMessages;
+    return commentRef.current?.fetchPreviousMessages();
   }, []);
 
   const retrySendMessage = useCallback((message: VisibleMessage) => {
