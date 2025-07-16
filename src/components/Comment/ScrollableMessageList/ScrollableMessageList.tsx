@@ -42,7 +42,7 @@ export function ScrollableMessageList({
   }, [items]);
 
   return (
-    <div className="chat-messages-container" ref={containerRef}>
+    <div className="comment-messages-container" ref={containerRef}>
       {items.map(renderItem)}
     </div>
   );
