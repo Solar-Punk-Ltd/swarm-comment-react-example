@@ -1,14 +1,14 @@
 {
   "name": "swarm-comment-react-example",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build"
   },
   "dependencies": {
-    "@solarpunkltd/swarm-comment-js": "^0.0.1",
-    "@solarpunkltd/comment-system": "^1.8.2",
-    "@ethersphere/bee-js": "^9.0.3",
+    "@solarpunkltd/swarm-comment-js": "^0.0.3",
+    "@solarpunkltd/comment-system": "^1.8.3",
+    "@ethersphere/bee-js": "^9.6.0",
     "clsx": "^2.1.1",
     "emoji-picker-react": "^4.13.1",
     "ethers": "^6.13.3",

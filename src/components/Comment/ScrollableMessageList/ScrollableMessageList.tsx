@@ -14,6 +14,7 @@ export function ScrollableMessageList({
 }: ScrollableMessageListProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const previousItemsLengthRef = useRef<number>(0);
+  const lastScrolledItemsLengthRef = useRef<number>(0);
 
   const scrollToBottom = () => {
     if (containerRef.current) {
@@ -31,13 +32,18 @@ export function ScrollableMessageList({
 
   useEffect(() => {
     const count = items.length;
+    const hasNewItems = count > previousItemsLengthRef.current;
+    const shouldScroll = hasNewItems && isNearBottom();
 
-    if (count > previousItemsLengthRef.current || isNearBottom()) {
+    if (shouldScroll && count !== lastScrolledItemsLengthRef.current) {
       previousItemsLengthRef.current = count;
+      lastScrolledItemsLengthRef.current = count;
 
       requestAnimationFrame(() => {
         scrollToBottom();
       });
+    } else if (hasNewItems) {
+      previousItemsLengthRef.current = count;
     }
   }, [items]);
 
