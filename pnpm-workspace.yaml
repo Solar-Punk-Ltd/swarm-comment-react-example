@@ -1,0 +1,8 @@
+allowBuilds:
+  "@parcel/watcher": true
+  "@swc/core": true
+  esbuild: true
+  unrs-resolver: true
+minimumReleaseAgeExclude:
+  - "@solarpunkltd/comment-system@1.9.4"
+  - "@solarpunkltd/swarm-comment-js@0.0.12"

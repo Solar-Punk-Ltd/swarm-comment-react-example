@@ -5,6 +5,6 @@ function getEnv(name: string): string {
 }
 
 export const config = {
-  beeUrl: getEnv("VITE_BEE_URL"),
-  commentStamp: getEnv("VITE_COMMENT_STAMP"),
+  beeUrl: getEnv('VITE_BEE_URL'),
+  commentStamp: getEnv('VITE_COMMENT_STAMP'),
 };

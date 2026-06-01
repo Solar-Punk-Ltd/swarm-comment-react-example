@@ -1,11 +1,11 @@
-import { useState } from "react";
-import { PrivateKey } from "@ethersphere/bee-js";
+import { useState } from 'react';
+import { PrivateKey } from '@ethersphere/bee-js';
 
-import { getSigner } from "@/utils/wallet";
+import { getSigner } from '@/utils/wallet';
 
-import { Comment } from "@/components/Comment/Comment";
+import { Comment } from '@/components/Comment/Comment';
 
-import "./App.scss";
+import './App.scss';
 
 interface CommentData {
   topic: string;
@@ -21,27 +21,24 @@ function App() {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
-    const topic = formData.get("topic") as string;
-    const nickname = formData.get("name") as string;
+    const topic = formData.get('topic') as string;
+    const nickname = formData.get('name') as string;
     const signer = getSigner(nickname);
 
     setCommentData({ topic, nickname, signer });
     setShowUserModal(false);
   };
 
+  const isSubmitDisabled = !commentData?.topic || !commentData?.signer || !commentData?.nickname;
+
   return (
     <>
-      {showUserModal ? (
+      {showUserModal || isSubmitDisabled ? (
         <form onSubmit={handleFormSubmit}>
           <div>
             <label>
               Topic:
-              <input
-                name="topic"
-                type="text"
-                required
-                defaultValue="DOOMSDAYTOPIC3"
-              />
+              <input name="topic" type="text" required defaultValue="DOOMSDAYTOPIC3" />
             </label>
           </div>
           <div>
@@ -53,11 +50,7 @@ function App() {
           <button type="submit">Submit</button>
         </form>
       ) : (
-        <Comment
-          topic={commentData?.topic!}
-          signer={commentData?.signer!}
-          nickname={commentData?.nickname!}
-        />
+        <Comment topic={commentData.topic} signer={commentData.signer} nickname={commentData.nickname} />
       )}
     </>
   );
