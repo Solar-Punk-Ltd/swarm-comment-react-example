@@ -1,0 +1,13 @@
+{
+  "ignores": [
+    "@types/*",
+    "@commitlint/*",
+    "@eslint/*",
+    "eslint*",
+    "husky",
+    "prettier",
+    "typescript*",
+    "ts-node",
+    "vite*"
+  ]
+}

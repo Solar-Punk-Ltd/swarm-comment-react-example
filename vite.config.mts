@@ -9,13 +9,7 @@ const __dirname = path.dirname(__filename);
 
 export default defineConfig({
   plugins: [nodePolyfills(), react()],
-  css: {
-    preprocessorOptions: {
-      scss: {
-        api: "modern-compiler",
-      },
-    },
-  },
+
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),
@@ -32,7 +26,7 @@ export default defineConfig({
   },
   server: {
     headers: {
-      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      "Cache-Control": "no-cache, no-store, must-revalidate",
     },
   },
 });
